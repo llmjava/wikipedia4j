@@ -4,6 +4,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.io.*;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +25,12 @@ public class Wikipedia {
   }
 
   private List<Document> fetchDocForTerm(String term) throws Exception {
-    Map<String, String> params = Map.of(
-        "action", "query",
-        "format", "json",
-        "titles", term,
-        "prop", "extracts",
-        "explaintext", "true"
-        );
+    Map<String, String> params = new HashMap<>();
+    params.put("action", "query");
+    params.put("format", "json");
+    params.put("titles", term);
+    params.put("prop", "extracts");
+    params.put("explaintext", "true");
     String baseUrl = "https://en.wikipedia.org/w/api.php";
     URL url = buildUrl(baseUrl, params);
     

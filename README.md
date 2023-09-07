@@ -61,7 +61,11 @@ Example code to use the **Wikipedia API**:
 class App {
 
    public static void main(String[] args) {
-      
+        Wikipedia wiki = new Wikipedia();
+        List<Document> results = wiki.search("apple");
+        for(Document doc: results) {
+            System.out.println(doc);
+        }
    }
 }
 ```
