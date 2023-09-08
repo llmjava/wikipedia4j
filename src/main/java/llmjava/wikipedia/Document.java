@@ -1,15 +1,17 @@
 package llmjava.wikipedia;
 
-class Document {
+public class Document {
 
+  private String language;
   private String id;
   private String title;
   private String text;
 
-  public Document(String id, String title, String text) {
+  public Document(String language, String id, String title, String text) {
     this.id = id;
     this.text = text;
     this.title = title;
+    this.language = language;
   }
 
   public String getId() {
@@ -17,7 +19,7 @@ class Document {
   }
 
   public String getUrl() {
-    return "https://en.wikipedia.org/?curid=" + id;
+    return "https://" + language + ".wikipedia.org/?curid=" + id;
   }
 
   public String getText() {

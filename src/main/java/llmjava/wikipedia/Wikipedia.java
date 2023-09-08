@@ -11,6 +11,16 @@ import java.util.List;
 
 public class Wikipedia {
 
+  String language;
+
+  public Wikipedia() {
+    this("en");
+  }
+
+  public Wikipedia(String language) {
+    this.language = language;
+  }
+
 
   public List<Document> search(String term) throws Exception {
     // String term = this.options.getTerm();
@@ -31,7 +41,7 @@ public class Wikipedia {
     params.put("titles", term);
     params.put("prop", "extracts");
     params.put("explaintext", "true");
-    String baseUrl = "https://en.wikipedia.org/w/api.php";
+    String baseUrl = "https://" + this.language + ".wikipedia.org/w/api.php";
     URL url = buildUrl(baseUrl, params);
     
     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -41,7 +51,7 @@ public class Wikipedia {
     Response response = Response.parse(jsonResult);
     List<Document> documents = new ArrayList<>(response.query.pages.size());
     for(Response.Page page: response.query.pages.values()) {
-      documents.add(new Document(page.pageid, page.title, page.extract));
+      documents.add(new Document(this.language, page.pageid, page.title, page.extract));
     }
 
     return documents;
