@@ -21,6 +21,10 @@ public class WikipediaTest {
     System.out.println("============ Query ============");
     List<Document>  results3 = wiki.suggest("apple");
     System.out.println(results3);
+
+    System.out.println("============ Query ============");
+    List<Document>  results4 = wiki.random(5);
+    System.out.println(results4);
   }
 
   @Test
