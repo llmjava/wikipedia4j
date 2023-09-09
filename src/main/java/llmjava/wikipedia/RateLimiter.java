@@ -42,6 +42,9 @@ public class RateLimiter {
         }
     }
 
+    /**
+     * Invoked after calling the request to reset state
+     */
     public void after() {
         if(RATE_LIMIT) {
             RATE_LIMIT_LAST_CALL = LocalDateTime.now();

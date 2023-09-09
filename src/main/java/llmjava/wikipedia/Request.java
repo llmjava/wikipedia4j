@@ -15,6 +15,12 @@ public class Request {
       headers.put("User-Agent", "wikipedia4j (https://github.com/llmjava/wikipedia4j)");
     }
 
+    public Request(String language, String userAgent) {
+      setLanguage(language);
+      setUserAgent(userAgent);
+      headers.put("content-type", "application/json;charset=UTF-8");
+    }
+
     public void setLanguage(String language) {
         this.baseUrl = "https://" + language + ".wikipedia.org/w/api.php";
     }

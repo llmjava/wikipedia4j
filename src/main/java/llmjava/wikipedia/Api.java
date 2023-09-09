@@ -8,6 +8,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
 
+import llmjava.wikipedia.response.Response;
+import llmjava.wikipedia.response.ResponseParser;
+
 public class Api {
 
   RateLimiter rateLimiter;
@@ -22,7 +25,7 @@ public class Api {
    * @param request (Request) - request to wikipedia.org
    * @return a parsed dict of the JSON response.
    */
-  Response execute(Request request) {
+  <T> T execute(Request request, ResponseParser<T> parser) {
     
     request.addParam("format", "json");
 
@@ -31,7 +34,7 @@ public class Api {
 
     rateLimiter.before();
 
-    Response response = null;
+    T response = null;
     try {
       URL url = buildUrl(request.baseUrl, request.params);
       
@@ -41,7 +44,7 @@ public class Api {
       }
 
       String jsonResult = read(connection);
-      response = Response.parse(jsonResult);
+      response = parser.parse(jsonResult);
     } catch (Exception e) {
       e.printStackTrace();
     }
