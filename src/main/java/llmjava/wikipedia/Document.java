@@ -33,4 +33,20 @@ public class Document {
   @Override public String toString() {
     return "Document[url: "+getUrl()+", title: "+getTitle()+", text: "+getText().substring(0, 50)+"...]";
   }
+
+  public static class GeoDocument extends Document {
+    Double lat;
+    Double lon;
+    Double dist;
+    public GeoDocument(String language, String id, String title, Double lat, Double lon, Double dist) {
+      super(language, id, title, null);
+      this.lat = lat;
+      this.lon = lon;
+      this.dist = dist;
+    }
+
+    @Override public String toString() {
+      return "Document[url: "+getUrl()+", title: "+getTitle()+", lat: "+lat+", lon: "+lon+", dist: "+dist+"]";
+    }
+  }
 }
