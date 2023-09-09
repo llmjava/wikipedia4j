@@ -115,4 +115,30 @@ public class Wikipedia {
 
     return docs;
   }
+
+  /**
+   * Do a Wikipedia search for `query`.
+   * @param query search query
+   * @param results the maxmimum number of results returned
+   * @param suggestion if True, return results and suggestion (if any) in a tuple
+   * @return list of matching documents
+   * @throws Exception
+   */
+  public List<Document> search(String query, int results, boolean suggestion) throws Exception {
+    Request request = new Request(language, userAgent);
+    request.addParam("list", "search");
+    request.addParam("srprop", "");
+    request.addParam("srlimit", String.valueOf(results));
+    request.addParam("srsearch", query);
+    if(suggestion)
+      request.addParam("srinfo", "suggestion");
+
+    SuggestionResponse response = this.api.execute(request, new SuggestionResponse.Parser());
+    List<Document> docs = new ArrayList<>(response.getResults().size());
+    for(Page page: response.getResults()) {
+      docs.add(new Document(this.language, page.pageid, page.title, page.extract));
+    }
+
+    return docs;
+  }
 }
