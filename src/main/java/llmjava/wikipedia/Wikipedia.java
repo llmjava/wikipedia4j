@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import llmjava.wikipedia.response.*;
+
 public class Wikipedia {
 
   String language = "en";
@@ -26,8 +28,8 @@ public class Wikipedia {
    * If rate limiting is not enabled, under some circumstances (depending on load on Wikipedia, the number of requests you and other `wikipedia` users are making, and other factors), Wikipedia may return an HTTP timeout error.
    * Enabling rate limiting generally prevents that issue, but please note that HTTPTimeoutError still might be raised.
    * 
-   * @param rate_limit - (Boolean) whether to enable rate limiting or not
-   * @param min_wait - (milliseconds) if rate limiting is enabled, `min_wait` is a timedelta describing the minimum time to wait before requests.
+   * @param rate_limit (Boolean) - whether to enable rate limiting or not
+   * @param min_wait (milliseconds) - if rate limiting is enabled, `min_wait` is a timedelta describing the minimum time to wait before requests.
    */
   public void set_rate_limiting(Boolean rate_limit, Long min_wait) {
     rateLimiter.RATE_LIMIT = rate_limit;
@@ -69,27 +71,41 @@ public class Wikipedia {
     if(title != null && !title.isEmpty())
       request.addParam("titles", title);
 
-    Response response = this.api.execute(request);
-    List<Document> docs = new ArrayList<>(response.query.geosearch.size());
-    for(Response.GeoPage page: response.query.geosearch) {
+    GeoSearchResponse response = this.api.execute(request, new GeoSearchResponse.Parser());
+    List<Document> docs = new ArrayList<>(response.getResults().size());
+    for(GeoPage page: response.getResults()) {
       docs.add(new Document.GeoDocument(this.language, page.pageid, page.title, page.lat, page.lon, page.dist));
     }
 
     return docs;
   }
 
+  /**
+   * Get a Wikipedia search suggestion for `query`.
+   * @param query search query
+   * @return a string or null if no suggestion was found.
+   */
+  public List<Document> suggest(String query) {
+    Request request = new Request(language, userAgent);
+    request.addParam("list", "search");
+    request.addParam("srinfo", "suggestion");
+    request.addParam("srprop", "");
+    request.addParam("srsearch", query);
+
+    SuggestionResponse response = this.api.execute(request, new SuggestionResponse.Parser());
+    return response.getDocs(this.language);
+  }
+
 
   public List<Document> search(String term) throws Exception {
-    Request request = new Request();
-    request.setLanguage(this.language);
-    request.setUserAgent(userAgent);
+    Request request = new Request(language, userAgent);
     request.addParam("titles", term);
     request.addParam("prop", "extracts");
     request.addParam("explaintext", "true");
 
-    Response response = this.api.execute(request);
-    List<Document> docs = new ArrayList<>(response.query.pages.size());
-    for(Response.Page page: response.query.pages.values()) {
+    Response response = this.api.execute(request, new Response.Parser());
+    List<Document> docs = new ArrayList<>(response.getResults().size());
+    for(Page page: response.getResults().values()) {
       docs.add(new Document(this.language, page.pageid, page.title, page.extract));
     }
 

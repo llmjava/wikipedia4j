@@ -7,6 +7,11 @@ public class Document {
   private String title;
   private String text;
 
+
+  public Document(String language, String id, String title) {
+    this(language, id, title, null);
+  }
+
   public Document(String language, String id, String title, String text) {
     this.id = id;
     this.text = text;
@@ -31,7 +36,12 @@ public class Document {
   }
 
   @Override public String toString() {
-    return "Document[url: "+getUrl()+", title: "+getTitle()+", text: "+getText().substring(0, 50)+"...]";
+    String str = "Document[url: "+getUrl()+", title: "+getTitle();
+    if(getText() != null) {
+      str += ", text: "+getText().substring(0, 50)+"...";
+    }
+    str += "]";
+    return str;
   }
 
   public static class GeoDocument extends Document {

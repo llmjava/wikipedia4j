@@ -13,9 +13,14 @@ public class WikipediaTest {
     for(Document doc: results1) {
         System.out.println(doc);
     }
+
     System.out.println("============ Query ============");
     List<Document> results2 = wiki.geosearch(36.8112314, 3.0362203);
     System.out.println(results2);
+
+    System.out.println("============ Query ============");
+    List<Document>  results3 = wiki.suggest("apple");
+    System.out.println(results3);
   }
 
   @Test
