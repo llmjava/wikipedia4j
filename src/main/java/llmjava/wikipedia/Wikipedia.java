@@ -58,6 +58,7 @@ public class Wikipedia {
    * @param title - The title of an article to search for
    * @param results - the maximum number of results returned
    * @param radius - Search radius in meters. The value must be between 10 and 10000
+   * @return a list of documents near the center point
    */
   public List<Document> geosearch(Double latitude, Double longitude, String title, int results, int radius) {
     Request request = new Request();
@@ -97,7 +98,8 @@ public class Wikipedia {
   }
 
   /**
-   * Get a list of random Wikipedia article titles. See http://en.wikipedia.org/w/api.php?action=query&list=random&rnlimit=5000&format=jsonfm
+   * Get a list of random Wikipedia article titles.
+   * @see <a href="http://en.wikipedia.org/w/api.php?action=query&list=random&rnlimit=5000&format=jsonfm">example url</a>
    * note:: Random only gets articles from namespace 0, meaning no Category, User talk, or other meta-Wikipedia pages.
    * @param pages the number of random pages returned (max of 10)
    * @return a list of randomly selected documents
