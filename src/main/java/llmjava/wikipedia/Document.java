@@ -6,17 +6,26 @@ public class Document {
   private String id;
   private String title;
   private String text;
-
+  private Double lat = -1.0;
+  private Double lon = -1.0;
+  private Double dist = -1.0;
 
   public Document(String language, String id, String title) {
-    this(language, id, title, null);
+    this.language = language;
+    this.id = id;
+    this.title = title;
+  }
+
+  public Document(String language, String id, String title, Double lat, Double lon, Double dist) {
+    this(language, id, title);
+    this.lat = lat;
+    this.lon = lon;
+    this.dist = dist;
   }
 
   public Document(String language, String id, String title, String text) {
-    this.id = id;
+    this(language, id, title);
     this.text = text;
-    this.title = title;
-    this.language = language;
   }
 
   public String getId() {
@@ -40,23 +49,16 @@ public class Document {
     if(getText() != null) {
       str += ", text: "+getText().substring(0, 50)+"...";
     }
+    if(lat != -1) {
+      str += ", lat: " + lat;
+    }
+    if(lon != -1) {
+      str += ", lon: " + lon;
+    }
+    if(dist != -1) {
+      str += ", dist: " + dist;
+    }
     str += "]";
     return str;
-  }
-
-  public static class GeoDocument extends Document {
-    Double lat;
-    Double lon;
-    Double dist;
-    public GeoDocument(String language, String id, String title, Double lat, Double lon, Double dist) {
-      super(language, id, title, null);
-      this.lat = lat;
-      this.lon = lon;
-      this.dist = dist;
-    }
-
-    @Override public String toString() {
-      return "Document[url: "+getUrl()+", title: "+getTitle()+", lat: "+lat+", lon: "+lon+", dist: "+dist+"]";
-    }
   }
 }

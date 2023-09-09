@@ -75,7 +75,7 @@ public class Wikipedia {
     GeoSearchResponse response = this.api.execute(request, new GeoSearchResponse.Parser());
     List<Document> docs = new ArrayList<>(response.getResults().size());
     for(GeoPage page: response.getResults()) {
-      docs.add(new Document.GeoDocument(this.language, page.pageid, page.title, page.lat, page.lon, page.dist));
+      docs.add(new Document(this.language, page.pageid, page.title, page.lat, page.lon, page.dist));
     }
 
     return docs;
