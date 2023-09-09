@@ -58,6 +58,7 @@ public class Wikipedia {
    * @param title - The title of an article to search for
    * @param results - the maximum number of results returned
    * @param radius - Search radius in meters. The value must be between 10 and 10000
+   * @return a list of documents near the center point
    */
   public List<Document> geosearch(Double latitude, Double longitude, String title, int results, int radius) {
     Request request = new Request();
@@ -83,7 +84,7 @@ public class Wikipedia {
   /**
    * Get a Wikipedia search suggestion for `query`.
    * @param query search query
-   * @return a string or null if no suggestion was found.
+   * @return a list of documents or nothing if no suggestion was found.
    */
   public List<Document> suggest(String query) {
     Request request = new Request(language, userAgent);
@@ -96,6 +97,22 @@ public class Wikipedia {
     return response.getDocs(this.language);
   }
 
+  /**
+   * Get a list of random Wikipedia article titles.
+   * @see <a href="http://en.wikipedia.org/w/api.php?action=query&list=random&rnlimit=5000&format=jsonfm">example url</a>
+   * note:: Random only gets articles from namespace 0, meaning no Category, User talk, or other meta-Wikipedia pages.
+   * @param pages the number of random pages returned (max of 10)
+   * @return a list of randomly selected documents
+   */
+  public List<Document> random(int pages) {
+    Request request = new Request(language, userAgent);
+    request.addParam("list", "random");
+    request.addParam("rnnamespace", String.valueOf(0));
+    request.addParam("rnlimit", String.valueOf(pages));
+
+    RandomResponse response = this.api.execute(request, new RandomResponse.Parser());
+    return response.getDocs(this.language);
+  }
 
   public List<Document> search(String term) throws Exception {
     Request request = new Request(language, userAgent);
